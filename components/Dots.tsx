@@ -1,6 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 interface DotsProps {
   index: number;
@@ -12,7 +15,9 @@ const Dots: React.FC<DotsProps> = ({ activeDot, index }) => {
     const isActive = activeDot.value === index;
 
     return {
-      backgroundColor: isActive ? "black" : "white",
+      backgroundColor: withTiming(isActive ? "black" : "white", {
+        duration: 150,
+      }),
     };
   });
 

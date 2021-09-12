@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, {
+  useAnimatedRef,
   useAnimatedScrollHandler,
   useDerivedValue,
   useSharedValue,
@@ -26,10 +27,18 @@ export default function App() {
     return Math.round(translateX.value / PAGE_WIDTH);
   });
 
+  const scrollRef = useAnimatedRef<ScrollView>();
+
+  const onIconPress = useCallback(() => {
+    if (activeIndex.value === PAGES.length - 1) return;
+    scrollRef.current?.scrollTo({ x: PAGE_WIDTH * (activeIndex.value + 1) });
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Animated.ScrollView
+        ref={scrollRef as any}
         style={styles.scrollView}
         horizontal
         pagingEnabled
@@ -65,7 +74,12 @@ export default function App() {
         </View>
         {/* // * iconContainer */}
         <View style={styles.fillCenter}>
-          <AntDesign name="arrowright" size={24} color="black" />
+          <AntDesign
+            name="arrowright"
+            size={24}
+            color="black"
+            onPress={onIconPress}
+          />
         </View>
       </View>
     </View>
