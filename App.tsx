@@ -9,6 +9,8 @@ import Animated, {
 import Page from "./components/Page";
 import { BACKGROUND_COLOR, PAGES } from "./constants";
 
+import { AntDesign } from "@expo/vector-icons";
+
 export default function App() {
   const translateX = useSharedValue(0);
 
@@ -38,6 +40,22 @@ export default function App() {
           />
         ))}
       </Animated.ScrollView>
+      <View style={styles.footer}>
+        {/* // * Paginator*/}
+        <View style={styles.fillCenter}>
+          {PAGES.map((_, index) => {
+            return <View key={index.toString()} />;
+          })}
+        </View>
+        {/* // * textContainer */}
+        <View style={styles.fillCenter}>
+          <Text style={styles.text}>View Board</Text>
+        </View>
+        {/* // * iconContainer */}
+        <View style={styles.fillCenter}>
+          <AntDesign name="arrowright" size={24} color="black" />
+        </View>
+      </View>
     </View>
   );
 }
@@ -49,5 +67,22 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  footer: {
+    height: 50,
+    marginBottom: 10,
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0,0)",
+  },
+  fillCenter: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 16,
+    textTransform: "uppercase",
+    letterSpacing: 1.7,
+    fontWeight: "500",
   },
 });

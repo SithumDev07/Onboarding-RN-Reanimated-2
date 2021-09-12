@@ -40,7 +40,16 @@ const Page: React.FC<PageProps> = ({ page, translateX, index }) => {
       [0, 0, 1],
       Extrapolate.CLAMP
     );
+
+    const opacity = interpolate(
+      translateX.value,
+      inputRange,
+      [0.5, 1, 0.5],
+      Extrapolate.CLAMP
+    );
+
     return {
+      opacity,
       transform: [
         {
           rotate: `${progress * Math.PI}rad`,
