@@ -33,13 +33,29 @@ const Page: React.FC<PageProps> = ({ page, translateX, index }) => {
     };
   });
 
+  const rImageStyle = useAnimatedStyle(() => {
+    const progress = interpolate(
+      translateX.value,
+      inputRange,
+      [0, 0, 1],
+      Extrapolate.CLAMP
+    );
+    return {
+      transform: [
+        {
+          rotate: `${progress * Math.PI}rad`,
+        },
+      ],
+    };
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.circleContainer}>
         <Animated.View style={[styles.circle, rCircleStyle]} />
         <Animated.Image
           source={page.source}
-          style={styles.image}
+          style={[styles.image, rImageStyle]}
           resizeMode={"contain"}
         />
       </View>
