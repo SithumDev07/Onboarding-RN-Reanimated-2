@@ -4,12 +4,14 @@ import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedScrollHandler,
+  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
-import Page from "./components/Page";
+import Page, { PAGE_WIDTH } from "./components/Page";
 import { BACKGROUND_COLOR, PAGES } from "./constants";
 
 import { AntDesign } from "@expo/vector-icons";
+import Dots from "./components/Dots";
 
 export default function App() {
   const translateX = useSharedValue(0);
@@ -18,6 +20,10 @@ export default function App() {
     onScroll: (event) => {
       translateX.value = event.contentOffset.x;
     },
+  });
+
+  const activeIndex = useDerivedValue(() => {
+    return Math.round(translateX.value / PAGE_WIDTH);
   });
 
   return (
@@ -42,9 +48,15 @@ export default function App() {
       </Animated.ScrollView>
       <View style={styles.footer}>
         {/* // * Paginator*/}
-        <View style={styles.fillCenter}>
+        <View style={[styles.fillCenter, { flexDirection: "row" }]}>
           {PAGES.map((_, index) => {
-            return <View key={index.toString()} />;
+            return (
+              <Dots
+                key={index.toString()}
+                activeDot={activeIndex}
+                index={index}
+              />
+            );
           })}
         </View>
         {/* // * textContainer */}

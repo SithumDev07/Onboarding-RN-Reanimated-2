@@ -115,4 +115,6 @@ const styles = StyleSheet.create({
   },
 });
 
+export { PAGE_WIDTH };
+
 export default Page;
