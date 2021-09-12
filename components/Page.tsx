@@ -1,19 +1,43 @@
 import React from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import { PageInterface } from "../constants";
 
 interface PageProps {
   page: PageInterface;
+  translateX: Animated.SharedValue<number>;
+  index: number;
 }
 
 const { width: PAGE_WIDTH, height: PAGE_HEIGHT } = Dimensions.get("window");
 
-const Page: React.FC<PageProps> = ({ page }) => {
+const Page: React.FC<PageProps> = ({ page, translateX, index }) => {
+  const inputRange = [
+    (index - 1) * PAGE_WIDTH,
+    index * PAGE_WIDTH,
+    (index + 1) * PAGE_WIDTH,
+  ];
+  const rCircleStyle = useAnimatedStyle(() => {
+    const scale = interpolate(
+      translateX.value,
+      inputRange,
+      [0, 1, 0],
+      Extrapolate.CLAMP
+    );
+    return {
+      transform: [{ scale }],
+    };
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.circleContainer}>
-        <View style={styles.circle} />
-        <Image
+        <Animated.View style={[styles.circle, rCircleStyle]} />
+        <Animated.Image
           source={page.source}
           style={styles.image}
           resizeMode={"contain"}
@@ -24,8 +48,6 @@ const Page: React.FC<PageProps> = ({ page }) => {
     </View>
   );
 };
-
-export default Page;
 
 const CIRCLE_WIDTH = PAGE_WIDTH * 0.7;
 
@@ -40,7 +62,6 @@ const styles = StyleSheet.create({
   circle: {
     width: "100%",
     height: "100%",
-    aspectRatio: 1,
     backgroundColor: "white",
     borderRadius: CIRCLE_WIDTH / 2,
   },
@@ -68,3 +89,5 @@ const styles = StyleSheet.create({
     color: "grey",
   },
 });
+
+export default Page;
